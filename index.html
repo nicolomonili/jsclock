@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>A simple javascript Clock</title>
+		
+		<style>
+			
+			html, body {
+				height: 100%;
+				font-family: monospace;
+				background: #ddd;
+				overflow: hidden;
+			}
+			
+			#main {
+				display: flex;
+				justify-content: center;
+				height: 100%;
+			}
+			
+			#container {
+				display: flex;
+				align-self: center;
+				height: 80px;
+			}
+			
+			#container > div {
+				transition: margin-top 0.5s cubic-bezier(0.6, -0.30, 0.75, 0.05);
+			}
+			
+			#container > div > div{
+				width: 80px;
+				height: 80px;
+				line-height: 80px;
+				border-radius: 40px;
+				font-size: 30px;
+				text-align: center;
+				transition: background 0.5s;
+			}
+			
+			#container > div:nth-child(3) > div,
+			#container > div:nth-child(6) > div {
+				width: 40px;
+			}
+			
+			.active {
+				font-weight: bold;
+			    background: #d4d4d4;
+			    border-radius: 40px;
+				font-size: 50px!important;
+			}
+			
+			.inactive {
+				color: #cac9c9;
+			}
+			
+			@media (max-width: 700px) {
+				
+				#container {
+					height: 40px;
+				}
+				
+				#container > div > div {
+					width: 40px;
+					height: 40px;
+					line-height: 40px;
+					border-radius: 40px;
+					font-size: 15px;
+				}
+				
+				.active {
+				    border-radius: 20px;
+					font-size: 25px!important;
+				}
+				
+			}
+			
+		</style>
+		
+	</head>
+
+	<body>
+		<div id="main">
+			<div id="container">
+				<div>
+					<div>0</div>
+					<div>1</div>
+					<div>2</div>
+				</div>
+				<div>
+					<div>0</div>
+					<div>1</div>
+					<div>2</div>
+					<div>3</div>
+					<div>4</div>
+					<div>5</div>
+					<div>6</div>
+					<div>7</div>
+					<div>8</div>
+					<div>9</div>
+				</div>
+				<div>
+					<div>:</div>
+				</div>
+				<div>
+					<div>0</div>
+					<div>1</div>
+					<div>2</div>
+					<div>3</div>
+					<div>4</div>
+					<div>5</div>
+				</div>
+				<div>
+					<div>0</div>
+					<div>1</div>
+					<div>2</div>
+					<div>3</div>
+					<div>4</div>
+					<div>5</div>
+					<div>6</div>
+					<div>7</div>
+					<div>8</div>
+					<div>9</div>
+				</div>
+				<div>
+					<div>:</div>
+				</div>
+				<div>
+					<div>0</div>
+					<div>1</div>
+					<div>2</div>
+					<div>3</div>
+					<div>4</div>
+					<div>5</div>
+				</div>
+				<div>
+					<div>0</div>
+					<div>1</div>
+					<div>2</div>
+					<div>3</div>
+					<div>4</div>
+					<div>5</div>
+					<div>6</div>
+					<div>7</div>
+					<div>8</div>
+					<div>9</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script type="text/javascript">
+		
+		var dim = parseInt($("#container").css("height"));
+		
+		$(window).on("resize", function() {
+			dim = parseInt($("#container").css("height"));
+		});
+		
+		(function clock(){
+				
+			var time = new Date();
+			time.setSeconds(time.getSeconds() + 1);
+			
+			var hh = String("0" + time.getHours()).slice(-2).split("");
+			var mm = String("0" + time.getMinutes()).slice(-2).split("");
+			var ss = String("0" + time.getSeconds()).slice(-2).split("");
+			
+			$("#container > div:nth-child(1)").css("margin-top" , -(dim * hh[0]) + "px");
+			$("#container > div:nth-child(2)").css("margin-top" , -(dim * hh[1]) + "px");
+			
+			$("#container > div:nth-child(4)").css("margin-top" , -(dim * mm[0]) + "px");
+			$("#container > div:nth-child(5)").css("margin-top" , -(dim * mm[1]) + "px");
+			
+			$("#container > div:nth-child(7)").css("margin-top" , -(dim * ss[0]) + "px");
+			$("#container > div:nth-child(8)").css("margin-top" , -(dim * ss[1]) + "px");
+			
+			setTimeout(function(){
+				clock();
+			}, 1000);
+			
+		})();
+		
+		(function anim() {
+			for(var i = 1 ; i <= 8 ; i++){
+				if(i % 3 == 0) continue;
+				for (var j = 1; j <= $("#container > div:nth-child("+i+") > div").length; j++) {
+					
+					var tmp = parseInt($("#container > div:nth-child("+i+")").css("margin-top"));
+					tmp = (tmp < 0 ? tmp * -1 : tmp) / dim;
+					
+					var $div = $("#container > div:nth-child("+i+") > div:nth-child("+j+")");
+					if($div.text() == tmp) {
+						$div.removeClass();
+						$div.addClass("active");
+					} else {
+						$div.removeClass();
+						$div.addClass("inactive");
+					}
+				}
+			}
+			
+			setTimeout(function(){
+				anim();
+			}, 100);
+			
+		})();
+		
+	</script>
+
+</html>
